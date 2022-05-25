@@ -55,4 +55,52 @@
 - Other API's include:
   - `Dimensions` - which provides the device's height and width dimensions
   - `Platform` - which returns whether a device is on the IOS or Android platform
-    - We can test with the `Platform` API to determine which device is being used and specify the appropriate component to disply in the application window
+    - We can test with the `Platform` API to determine which device is being used and specify the appropriate component to display in the application window
+- Here are all the API's that were just reviewed in action:
+  ```
+  import React from "react";
+  import {
+    Text,
+    View,
+    ActivityIndicator,
+    ProgressViewIOS,
+    ProgressBarAndroid,
+    Button,
+    Alert,
+    Dimensions,
+    Platform,
+  } from "react-native";
+
+  const { height, width } = Dimensions.get("window");
+
+  export default function App() {
+    console.log("MSG: App reloaded on local device!");
+    const onButtonPress = () => {
+      Alert.alert(
+        `... at ${new Date().toLocaleTimeString()} button was pressed!`
+      );
+    };
+    return (
+      <View style={{ padding: 50 }}>
+        <Text>Hello World!</Text>
+        <Text>Red</Text>
+        <Text style={{ fontSize: 50 }}>Green</Text>
+        <Text style={{ fontSize: 75 }}>Red</Text>
+        {Platform.OS === "ios" && <ProgressViewIOS progress={0.5} />}
+        {Platform.OS === "android" && (
+          <ProgressBarAndroid
+            styleAttr="horizontal"
+            indeterminate={false}
+            color="blue"
+            progress={0.5}
+          />
+        )}
+        <ActivityIndicator />
+        <Button title="Click me" onPress={onButtonPress} />
+        <Text>Height: {height}</Text>
+        <Text>Width: {width}</Text>
+        <Text>Device type: {Platform.OS}</Text>
+      </View>
+    );
+  }
+  ```
