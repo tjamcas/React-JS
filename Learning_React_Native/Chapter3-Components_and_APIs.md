@@ -233,3 +233,45 @@
     },
   });
   ```
+
+### Video 5: The Image Component
+- To add images as part of our app's user interface, follow these steps:
+  - /1. Import the file(s) you want to include in the UI:   
+    `import picBiscuit from "./assets/biscuit.jpg";`
+  - /2. Import the `Image` component from the `react-native library:    
+    `import { Image } from "react-native";`
+  - /3. Add a `<Image />` element to your component:    
+    `<Image style={styles.image} source={picBiscuit} />`
+  - 4. Set your image attributes in your `styles` style sheet
+- Here is an example of `App.js` with images added to the UI:
+  ```
+  import React from "react";
+  import { Image, StyleSheet, View, Dimensions } from "react-native";
+  import picBiscuit from "./assets/biscuit.jpg";
+  import picJungle from "./assets/jungle.jpg";
+
+  export default function App() {
+    console.log("MSG: App reloaded on local device!");
+
+    return (
+      <View style={styles.page}>
+        <Image style={styles.image} source={picBiscuit} />
+        <Image style={styles.image} source={picJungle} />
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    page: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    image: {
+      flex: 1,
+      borderRadius: 50,
+      margin: 10,
+      width: Dimensions.get("window").width - 10,
+    },
+  });
+  ```
