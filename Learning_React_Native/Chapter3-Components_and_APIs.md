@@ -104,3 +104,82 @@
     );
   }
   ```
+
+### Video 3: Creating Style Sheets
+- React Native styles UI components with a component, `StyleSheet`, that's based on CSS. 
+- To use the `StyleSheet` component,
+  - /1. First, import the `StyleSheet` object from React Native   
+    `import { StyleSheet, Text, View } from "react-native";`
+  - /2. Then add your styles - a good pattern is to define `styles` as an object (using the `StyleSheet.create()` method) and place it below the component at the bottom of your `app.js` file.    
+    ```
+    const styles = StyleSheet.create({
+    page: {
+      marginTop: 40,
+      backgroundColor: "#DDD"
+    },
+    text: {
+      fontSize: 22,
+      color: "red",
+      backgroundColor: "yellow",
+      margin: 10,
+      padding: 5
+    },
+    selectedText: {
+      backgroundColor: "red",
+      color: "yellow"
+    }
+  });
+    ```
+  - /3. Then set the `style` property in your component elements equal to the appropriate `styles` object key-value pair(s). Note that we assign multiple style objects by listing them in an array, e.g., `style={[styles.text, styles.selectedText]}`
+    ```
+    <View style={styles.page}>
+      <Text style={styles.text}>red</Text>
+      <Text style={[styles.text, styles.selectedText]}>
+        green
+      </Text>
+      <Text style={styles.text}>blue</Text>
+    </View>
+    ```
+- More information on the React Native `StyleSheet` API with its methods and properties is found at: <https://reactnative.dev/docs/stylesheet>
+- More information on how React Native can design and style your application's user interface can be found at: <https://reactnative.dev/docs/style>
+- Here is the full modified `app.js` file:
+  ```
+  import React from "react";
+  import { Text, View, Alert, Button, StyleSheet } from "react-native";
+
+  export default function App() {
+    console.log("MSG: App reloaded on local device!");
+    const onButtonPress = () => {
+      Alert.alert(
+        `... at ${new Date().toLocaleTimeString()} button was pressed!`
+      );
+    };
+    return (
+      <View style={styles.page}>
+        <Text style={styles.text}>Red</Text>
+        <Text style={[styles.text, styles.selectedText]}>Green</Text>
+        <Text style={styles.text}>Blue</Text>
+        <Button title="Click me" onPress={onButtonPress} />
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    page: {
+      marginTop: 40,
+      backGroundColor: "#DDD",
+    },
+    text: {
+      fontSize: 22,
+      color: "red",
+      backgroundColor: "yellow",
+      margin: 10,
+      padding: 5,
+    },
+    selectedText: {
+      color: "yellow",
+      backgroundColor: "red",
+    },
+  });
+
+  ```
