@@ -142,7 +142,7 @@
     ```
 - More information on the React Native `StyleSheet` API with its methods and properties is found at: <https://reactnative.dev/docs/stylesheet>
 - More information on how React Native can design and style your application's user interface can be found at: <https://reactnative.dev/docs/style>
-- Here is the full modified `app.js` file:
+- Here is the full modified `App.js` file:
   ```
   import React from "react";
   import { Text, View, Alert, Button, StyleSheet } from "react-native";
@@ -181,5 +181,55 @@
       backgroundColor: "red",
     },
   });
+  ```
 
+### Video 4: Flexbox Layouts
+- Layout in React Native is based upon Flexbox, a popular layout module for CSS. 
+- Flexbox gives us the ability to compose styles that can position elements anywhere on a screen. 
+- In Flexbox, there are flex containers and flex elements. In the following, the `<View />` node will be our flex container, and it contains three flex `<Text />` elements. 
+- Flex containers either display their child elements in a row (the default) or in a column. 
+  - the `flexDirection` attribute can be set to `"row"` or `"column"`: `flexDirection: "column",`
+  - Setting this attribute to our `<Text />` elements, `flex: 1,`, evenly distributes the elements across a single row
+- More information on Flexbox can be found in this guide at: <https://css-tricks.com/snippets/css/a-guide-to-flexbox/>
+- Here is an example of `App.js` code that uses Flexbox to style the UI:
+  ```
+  import React from "react";
+  import { Text, View, StyleSheet } from "react-native";
+
+  export default function App() {
+    console.log("MSG: App reloaded on local device!");
+
+    return (
+      <View style={styles.page}>
+        <Text style={styles.text}>Red</Text>
+        <Text style={[styles.text, styles.selectedText]}>Green</Text>
+        <Text style={styles.text}>Blue</Text>
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    page: {
+      flex: 1,
+      flexDirection: "column",
+      justifyContent: "flex-end",
+      alignItems: "flex-start",
+      marginTop: 40,
+      backgroundColor: "#DDD",
+    },
+    text: {
+      flex: 1,
+      textAlign: "center",
+      fontSize: 22,
+      color: "red",
+      backgroundColor: "yellow",
+      margin: 10,
+      padding: 5,
+    },
+    selectedText: {
+      alignSelf: "flex-end",
+      backgroundColor: "red",
+      color: "yellow",
+    },
+  });
   ```
