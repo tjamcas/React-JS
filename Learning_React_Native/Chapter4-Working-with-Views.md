@@ -112,4 +112,81 @@
     - another `<View />` component and a `<Text />` component
 
 ### Video 3: Extracting a Custom Component
--
+- The `<TouchableHighlight />` component in the example above combines multiple child components into a single color button that displays the name and swatch of a color, and has the behavior where clicking on the color button changes the background color. 
+- We will extract and move this code into a reusable component called the `<ColorButton/>`.
+- Here is the code that allows us to do that:
+  ```
+  import React, { useState } from "react";
+  import { StyleSheet, View, Text, TouchableHighlight } from "react-native";
+
+  function ColorButton({ backgroundColor, onPress = (f) => f }) {
+    return (
+      <TouchableHighlight
+        style={styles.button}
+        onPress={() => onPress(backgroundColor)}
+        underlayColor="orange"
+      >
+        <View style={styles.row}>
+          <View style={[styles.sample, { backgroundColor }]} />
+          <Text style={styles.buttonText}>{backgroundColor}</Text>
+        </View>
+      </TouchableHighlight>
+    );
+  }
+
+  export default function App() {
+    const [backgroundColor, setBackgroundColor] = useState("blue");
+    console.log("MSG: App reloaded on local device!");
+
+    return (
+      <View style={[styles.container, { backgroundColor }]}>
+        <ColorButton backgroundColor="red" onPress={setBackgroundColor} />
+        <ColorButton backgroundColor="green" onPress={setBackgroundColor} />
+        <ColorButton backgroundColor="blue" onPress={setBackgroundColor} />
+        <ColorButton backgroundColor="yellow" onPress={setBackgroundColor} />
+        <ColorButton backgroundColor="purple" onPress={setBackgroundColor} />
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    button: {
+      margin: 10,
+      padding: 10,
+      borderWidth: 2,
+      borderRadius: 10,
+      alignSelf: "stretch",
+      backgroundColor: "rgba(255,255,255,0.8)",
+    },
+    buttonText: {
+      fontSize: 30,
+      textAlign: "center",
+    },
+    row: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    sample: {
+      height: 20,
+      width: 20,
+      borderRadius: 10,
+      margin: 5,
+      backgroundColor: "white",
+    },
+  });
+  ```
+  - Note 1: We move the `<TouchableHighlight />` code into its own component, `<ColorButton />`, that is defined above and separate from the `<App />` component.
+  - Note 2: We pass two arguments into the `<ColorButton />` component:
+    - `backgroundColor` is the first parameter
+    - The `onPress` property is the second parameter, and it is passed with the form `onPress = f => f`. By passing a default value, `f => f`, which is a "dummy" function, if the parent component does not pass an `onPress` property with a function value to `<ColorButton>`, the application will not break. The `<ColorButton />` component will just run the dummy function which does nothing.
+      - In the code above, the `App` component does pass an `onPress` property with the value of the function `setBackgroundColor`:   
+        <ColorButton backgroundColor="green" onPress={setBackgroundColor} />
+        
+### Video 4: Importing a Custom Component
+- Now that we have extracted the `<ColorButton />` component, we should move it out of the `App.js` component file and place it in its own file in a newly created `components` subfolder.
