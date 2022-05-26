@@ -340,4 +340,4 @@
       }
     }
     ```
-  - Note 4: Each item from the `defaultColors.json` file has a "color" and an "id" which we have to pass into the `renderItem` function above.
+  - Note 4: Each item from the `defaultColors.json` file has a "color" and an "id" which we have to pass into the `renderItem` function above -- the `key` property is always required by React when working with a list.
