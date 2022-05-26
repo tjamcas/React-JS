@@ -220,7 +220,7 @@
     },
   });
   ```
-  - Note 1: In the import statement above, we don't enclose `ColorButton` in curly braces because it is the default export in the `components/ColorButton.js` file.
+  - Note 1: In the import statement above, we don't enclose `ColorButton` in curly braces because it is the default export in the `components/ColorButton.js` file below.
 - `ColorButton.js` looks like this:
   ```
   import React from "react";
@@ -267,3 +267,77 @@
     },
   });
   ```
+
+### Video 5: Using a Flat List
+- A `<FlatList />` is a special type of view that is scrollable and is used to render a list of content. In this example, we render the `<FlatList />` from the `App` component.
+- Inside the `app` `data` folder, resides the JSON document file, `defaultColors.json`, in the following format:
+  ```
+  [
+    {
+      "id": "RYffukSB",
+      "color": "red"
+    },
+    {
+      "id": "Nmj_Aalkk",
+      "color": "green"
+    },
+    {
+      "id": "dPa_1y9h2",
+      "color": "blue"
+    },
+    ...
+    {
+      "id": "GiKqTrINl",
+      "color": "lightred"
+    }
+  ]
+  ```
+- In the `App.js` file we will replace the `<View>...</View>` parent component with the `<FlatList />` component:
+  ```
+  import React, { useState } from "react";
+  import { StyleSheet, FlatList } from "react-native";
+  import ColorButton from "./components/ColorButton";
+  import defaultColors from "./data/defaultColors.json";
+
+  export default function App() {
+    const [backgroundColor, setBackgroundColor] = useState("blue");
+    console.log("MSG: App reloaded on local device!");
+
+    return (
+      <FlatList
+        style={[styles.container, { backgroundColor }]}
+        data={defaultColors}
+        renderItem={({ item }) => {
+          return (
+            <ColorButton
+              key={item.id}
+              backgroundColor={item.color}
+              onPress={setBackgroundColor}
+            />
+          );
+        }}
+      />
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      display: "flex",
+    },
+  });
+  ```
+  - Note 1: We need to modify the import statement to include `FlatList`
+  - Note 2: A flat list expects an array of data. So, using the `data` property we can pass the `defaultColors` to this flat list:    
+    `data = {defaultColors}`
+  - Note 3: We also have to provide a `<FlatList />` with a `renderItem` property whose value is a function that will be invoked once for each item in our list:
+    ```
+    renderItem = {
+      ({ item }) => {
+        return (
+          <ColorButton key={item.id} backgroundColor={item.color} onPress={setBackgroundColor} />
+        )
+      }
+    }
+    ```
+  - Note 4: Each item from the `defaultColors.json` file has a "color" and an "id" which we have to pass into the `renderItem` function above.
