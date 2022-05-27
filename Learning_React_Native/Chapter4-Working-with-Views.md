@@ -341,3 +341,81 @@
     }
     ```
   - Note 4: Each item from the `defaultColors.json` file has a "color" and an "id" which we have to pass into the `renderItem` function above -- the `key` property is always required by React when working with a list.
+
+### Video 6: Creating a Form
+- In this video, we create another component file that creates a small form that will be placed at the top of app's UI where users can add their own colors to the list.
+- Here is the new component file `./components/ColorForm.js`
+  ```
+  import React from "react";
+  import { StyleSheet, View, TextInput, Button } from "react-native";
+
+  export default function ColorForm() {
+    return (
+      <View style={styles.container}>
+        <TextInput style={styles.txtInput} autoCapitalize="none" />
+        <Button title="add" />
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      marginTop: 40,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    txtInput: {
+      flex: 1,
+      borderWidth: 2,
+      fontSize: 20,
+      margin: 5,
+      borderRadius: 5,
+      padding: 5,
+    },
+  });
+  ```
+  - Note 1: We add the `<TextInput />` component which allows the app's UI to collect text input from users
+  - Note 2: To make the search row visible, we change the 'container` flex direction to "row", and this aligns the text input element and the add button in a row, with the text input growing into any remaining space that the add button doesn't need
+- Here is the modified `App.js` file:
+  ```
+  import React, { useState } from "react";
+  import { StyleSheet, FlatList } from "react-native";
+  import ColorButton from "./components/ColorButton";
+  import ColorForm from "./components/ColorForm";
+  import defaultColors from "./data/defaultColors.json";
+
+  export default function App() {
+    const [backgroundColor, setBackgroundColor] = useState("blue");
+    console.log("MSG: App reloaded on local device!");
+
+    return (
+      <>
+        <ColorForm />
+        <FlatList
+          style={[styles.container, { backgroundColor }]}
+          data={defaultColors}
+          renderItem={({ item }) => {
+            return (
+              <ColorButton
+                key={item.id}
+                backgroundColor={item.color}
+                onPress={setBackgroundColor}
+              />
+            );
+          }}
+        />
+      </>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      display: "flex",
+    },
+  });
+  ```
+  - Note: The only change is importing the `ColorForm` component file and adding it above the `<Flatlist />` component.
+
+### Video 7: Collecting Input
+-
