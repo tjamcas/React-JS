@@ -449,3 +449,23 @@
     
   />
   ```
+
+
+### Creating a Custom Hook
+- Audio text:   
+  React hooks give us a way to isolate and separate presentation from functionality. In the last lesson, we created the colorForm, which will collect a new color from the user and then pass it to the app js component via the on new color property. At present, we are simply displaying an alert, letting us know that we have to add this color. So I'm going to get rid of the alert and I'm going to get rid of the defaultColors. We need to capture new colors from our users and then add them to this list of colors. So using the useState hook, we're going to create a state variable for colors. And we also get a function for changing that state variable, set colors. Don't forget to change the default colors to colors. And now when the app initially renders, we see an empty list of colors. Now on line nine, I'm going to create a new function for adding colors. All we have to do is send the color that we want to add to our list to this function and the function will do the rest. So I'm going to go ahead and create a new color instance. And this is going to be an object that contains a unique ID and the color that was passed to this function.    
+  So we're going to need a package to help us create unique identifiers. I'm going to use a package called short ID So let's open up the terminal. And npm install shortid - `npm i shortid`. Short ID is used to generate unique identifiers. And these identifiers are short, they're not too long.     
+  So now that we have shortid installed, I'm going to import the generate function from the shortid package. And we'll use the generate function when it's time to generate a new ID. So when a user adds a new color, we'll generate a unique identifier. And now what we want to do is take the new color and add it to the list of colors. So to do this on line 12, I'm going to invoke the setColors function, and I'm going to pass it a new array. That new array is going to contain our newColor and the rest of the colors. So that's what these three dots are for. This is the array spread operator, what it's going to do is take all of the colors that are in the current array, and then add them to the end of this new array. Calling set colors will cause the app component to rerender. 'setColors([newColor, ...colors]);`     
+  So now down here, I'm going to get rid of the alert call. And I'm going to invoke our addColor function and pass it the newColor. Now again, creating a function that simply takes the argument and then passes that argument to the next function isn't needed. The new color will be passed to the addColor function. `<ColorForm onNewColor={addColor} />`     
+  All right, so let's test it out. So I will come over here and use our form to add red. And now we can see red has been added to our list of colors. So adding green also displays our green button. So the code found here on line nine through 13 contains all of the functionality to create a new list of colors as well as the functionality to add colors to that list. We can isolate this functionality into a custom hook. Custom hooks are great because they separate the functionality from the presentation. And they give us a way to reuse that functionality and other components. So I'm going to create a new variable called use colors. This is our custom hook. And now what I'm going to do is, I'm going to copy line 13 through line 17. And I'm going to paste it inside of my useColors function. Now I've isolated this functionality into its own hook.    
+  ```
+  const useColors = () => {
+    const [colors, setColors] = useState([]);
+    const addColor = color => {
+      const newColor = { id: generate(), color };
+      setColors([newColor, ...colors]);
+    };
+    return { colors, addColor };
+  };
+  ```
+  So the last thing that we need to do is we need to expose the list of colors in the addColor function to the consumer of this hook. I'll do so by returning an object with the list of colors in a function for adding colors. So on line 18, I can capture our colors in the addColor function from my useColors hook. And if we come over here to the simulator, we can see that we're still able to add colors. So we've now isolated all of the functionality for working with colors. The color functionality is no longer hard coded into the app component.
