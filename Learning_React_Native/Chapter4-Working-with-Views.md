@@ -418,4 +418,34 @@
   - Note: The only change is importing the `ColorForm` component file and adding it above the `<Flatlist />` component.
 
 ### Video 7: Collecting Input
--
+- In the last lesson, we constructed the user interface for our form. In this lesson, we're going to make the form work by collecting the user input and adding it to our list of colors. We're going to create a controlled form component. And what that means is React is going to control the state of our form. So we'll need the useState hook. We'll save the current input value in state. So the useState hook is going to give me the input value and a function to change that value.
+- In `components/ColorForm.js`:
+  - At first, the input value will be an empty stream. So I'm going to come down here to the text input and add the input value to the value property:    
+    `onChangeText={setValue}`
+- The text input didn't put itself as an object with methods that we can call, but we need some way to refer to the text input instance in order to call those functions. To do this, I'll need to import the useRef hook from React. And then I'll create a new reference called input using the useRef hook. Now that I've created this input ref, I need to refer to this text input. So I'll add the ref attribute, and make sure that we're pointing to our reference. Now we can use input.current to refer to this text input. Input.current.blur is going to deselect the text input and cause the keyboard to disappear. Calling setValue and sending it an empty string replaces the current value with an empty string. Now to test this functionality, I'll go ahead and enter a color like salmon and click add. And we can see our text input has been deselected, and the input value has been reset to an empty string, making it easy for our user to enter another color.
+  ```
+  <TextInput
+    ref={input}
+    style={styles.txtInput}
+    value={inputValue}
+    onChangeText={text => setValue(text)}
+    autoCapitalize="none"
+    placeholder="enter a color..."
+  />
+  ```
+- Let's head over to the app.js file and take a look at how we're going to use our component. Here on line 11 is we're adding our instance of the color form. And when there's a new color, I'd like to handle that through a property. So we can say, onNewColor. And that's a function that actually passes up the new color. And now, we'll just leave a little alert here with a to-do message that's passing up the color that we receive in this function.
+  ```
+  <ColorForm
+    onNewColor={newColor =>
+      Alert.alert(`TODO: add color ${newColor}`)
+    }
+  />
+  ```
+- go back to the ColorForm.js and implement this function property. So we will destructure the onNewColor property from our arguments. We'll also set this default dummy function, F, arrow, F. And this makes sure that the onNewColor property defaults to a function, so it won't throw errors if we call it. Down here on line 21, I'm going to replace this console.log by actually calling the onNewColor function property, and then passing the input value to it.
+  ```
+  export default function ColorForm({ onNewColor = f => f }) {
+  ...
+  <Button
+    
+  />
+  ```
