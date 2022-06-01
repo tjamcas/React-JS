@@ -418,38 +418,147 @@
   - Note: The only change is importing the `ColorForm` component file and adding it above the `<Flatlist />` component.
 
 ### Video 7: Collecting Input
-- In the last lesson, we constructed the user interface for our form. In this lesson, we're going to make the form work by collecting the user input and adding it to our list of colors. We're going to create a controlled form component. And what that means is React is going to control the state of our form. So we'll need the useState hook. We'll save the current input value in state. So the useState hook is going to give me the input value and a function to change that value.
-- In `components/ColorForm.js`:
-  - At first, the input value will be an empty stream. So I'm going to come down here to the text input and add the input value to the value property:    
-    `onChangeText={setValue}`
-- The text input didn't put itself as an object with methods that we can call, but we need some way to refer to the text input instance in order to call those functions. To do this, I'll need to import the useRef hook from React. And then I'll create a new reference called input using the useRef hook. Now that I've created this input ref, I need to refer to this text input. So I'll add the ref attribute, and make sure that we're pointing to our reference. Now we can use input.current to refer to this text input. Input.current.blur is going to deselect the text input and cause the keyboard to disappear. Calling setValue and sending it an empty string replaces the current value with an empty string. Now to test this functionality, I'll go ahead and enter a color like salmon and click add. And we can see our text input has been deselected, and the input value has been reset to an empty string, making it easy for our user to enter another color.
+- In the last video, we coded the user interface for a form that allows a user-supplied color to be entered into an input box. In this video, we make the form work by adding the user input to a list of colors by implementing a controlled form component. With controlled form components, React controls the state of our form with the `useState` hook. The `useState` hook provides the input value and a function to change that value.
+- Here is the revised `components/ColorForm.js` file:
   ```
-  <TextInput
-    ref={input}
-    style={styles.txtInput}
-    value={inputValue}
-    onChangeText={text => setValue(text)}
-    autoCapitalize="none"
-    placeholder="enter a color..."
-  />
-  ```
-- Let's head over to the app.js file and take a look at how we're going to use our component. Here on line 11 is we're adding our instance of the color form. And when there's a new color, I'd like to handle that through a property. So we can say, onNewColor. And that's a function that actually passes up the new color. And now, we'll just leave a little alert here with a to-do message that's passing up the color that we receive in this function.
-  ```
-  <ColorForm
-    onNewColor={newColor =>
-      Alert.alert(`TODO: add color ${newColor}`)
-    }
-  />
-  ```
-- go back to the ColorForm.js and implement this function property. So we will destructure the onNewColor property from our arguments. We'll also set this default dummy function, F, arrow, F. And this makes sure that the onNewColor property defaults to a function, so it won't throw errors if we call it. Down here on line 21, I'm going to replace this console.log by actually calling the onNewColor function property, and then passing the input value to it.
-  ```
-  export default function ColorForm({ onNewColor = f => f }) {
-  ...
-  <Button
-    
-  />
-  ```
+  import React, { useState, useRef } from "react";
+  import {
+    StyleSheet,
+    View,
+    TextInput,
+    Button
+  } from "react-native";
 
+  export default function ColorForm({ onNewColor = f => f }) {
+    const [inputValue, setValue] = useState("");
+    const input = useRef();
+    return (
+      <View style={styles.container}>
+        <TextInput
+          ref={input}
+          style={styles.txtInput}
+          value={inputValue}
+          onChangeText={text => setValue(text)}
+          autoCapitalize="none"
+          placeholder="enter a color..."
+        />
+        <Button
+          title="add"
+          onPress={() => {
+            input.current.blur();
+            onNewColor(inputValue);
+            setValue("");
+          }}
+        />
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      marginTop: 40,
+      flexDirection: "row",
+      alignItems: "center"
+    },
+    txtInput: {
+      flex: 1,
+      borderWidth: 2,
+      fontSize: 20,
+      margin: 5,
+      borderRadius: 5,
+      padding: 5
+    }
+  });
+  ```
+  - Note 1: We create a state variable for the text `inputValue` with the `useState` hook:   
+    `const [inputValue, setValue] = useState("");`
+  - Note 2: We add a `value` property to the `TextInput` component and set it to the state variable `inputValue`:   
+    `value={inputValue}`
+  - Note 3: We add the `onChangeText` property (<https://reactnative.dev/docs/textinput#onchangetext>) to the `TextInput` component and set is equal to the `useState` hook's `setValue` function:   
+    `onChangeText={text => setValue(text)};`    
+    However, we can write this in the more concise form:    
+    `onChangetext={setValue}    
+    The `onChangeText` property automatically passes the changed text in the `textInput` component to a callback function handler -- which in this case is the `setValue` function -- we can simply set the prop equal to `setValue`
+  - Note 4: We add a placeholder property to the `TextInput` component to direct the user to enter a color:    
+    `placeholder="enter a color..."
+  - Note 5: We create a reference to the text input with the `useRef` hook (<https://reactjs.org/docs/hooks-reference.html>) so that we can reference the text input's built-in methods:   
+    `const input = useRef();` and in the `TextInput` component:   
+    ```
+    <TextInput
+      ref={input}
+      ...
+    />
+    ```
+  - Note 6: We need to capture the text input when the user presses the `add` button, so we add an `onPress` prop to the `add` button - for now, the `onPress` prop will be set to a function that logs the input to the console:       
+    ```
+    onPress={() => {
+      input.current.blur();
+      console.log(`add value ${inputValue}`);
+      setValue("");
+    }}
+    ```
+    - Note 6a: `input.current.blur` deselect` the text input and disappears the keyboard.
+    - Note 6b: `setValue("")` resets the state variable `inputValue` back to an empty string
+  - Note 8 (See first Note 7 below): Finally, we modify the `onPress` call back function so that it passes the user's inputted color (ie. `inputValue`) to the `App` parent component's `onNewColor` function/property:
+    ```
+    onPress={() => {
+        input.current.blur();
+        onNewColor(inputValue);
+        setValue("");
+      }}
+    ```
+- Here is the modified `App.js` compent file that uses the `ColorForm` component:
+  ```
+  import React, { useState } from "react";
+  import { StyleSheet, FlatList, Alert } from "react-native";
+  import ColorButton from "./components/ColorButton";
+  import ColorForm from "./components/ColorForm";
+
+  import defaultColors from "./data/defaultColors.json";
+
+  export default function App() {
+    const [backgroundColor, setBackgroundColor] = useState(
+      "blue"
+    );
+    return (
+      <>
+        <ColorForm
+          onNewColor={newColor =>
+            Alert.alert(`TODO: add color ${newColor}`)
+          }
+        />
+        <FlatList
+          style={[styles.container, { backgroundColor }]}
+          data={defaultColors}
+          renderItem={({ item }) => {
+            return (
+              <ColorButton
+                key={item.id}
+                backgroundColor={item.color}
+                onPress={setBackgroundColor}
+              />
+            );
+          }}
+        />
+      </>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      display: "flex"
+    }
+  });
+  ```
+  - Note 7: We add the `onNewColor` property to the `<ColorForm/>` component that, for now, just pops an alert screen - the `ColorForm` component will supply the `newColor` value (as `inputValue`):    
+    ```
+    <ColorForm
+      onNewColor={newColor =>
+        Alert.alert(`TODO: add color ${newColor}`)
+      }
+    />
+    ```
 
 ### Creating a Custom Hook
 - Audio text:   
