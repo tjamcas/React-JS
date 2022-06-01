@@ -186,7 +186,7 @@
     - `backgroundColor` is the first parameter
     - The `onPress` property is the second parameter, and it is passed with the form `onPress = f => f`. By passing a default value, `f => f`, which is a "dummy" function, if the parent component does not pass an `onPress` property with a function value to `<ColorButton>`, the application will not break. The `<ColorButton />` component will just run the dummy function which does nothing.
       - In the code above, the `App` component does pass an `onPress` property with the value of the function `setBackgroundColor`:   
-        <ColorButton backgroundColor="green" onPress={setBackgroundColor} />
+        `<ColorButton backgroundColor="green" onPress={setBackgroundColor} />`
         
 ### Video 4: Importing a Custom Component
 - Now that we have extracted the `<ColorButton />` component, we should move it out of the `App.js` component file and place it in its own file in a newly created `components` subfolder.
