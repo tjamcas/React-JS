@@ -330,7 +330,7 @@
   - Note 1: We need to modify the import statement to include `FlatList`
   - Note 2: A flat list expects an array of data. So, using the `data` property we can pass the `defaultColors` to this flat list:    
     `data = {defaultColors}`
-  - Note 3: We also have to provide a `<FlatList />` with a `renderItem` property whose value is a function that will be invoked once for each item in our list:
+  - Note 3: The `<FlatList />` component requires a `renderItem` property (as well as a `data` prop) whose value is a function that will be invoked once for each item in our list:
     ```
     renderItem = {
       ({ item }) => {
