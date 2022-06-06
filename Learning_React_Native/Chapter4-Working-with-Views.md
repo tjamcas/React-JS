@@ -477,10 +477,10 @@
   - Note 3: We add the `onChangeText` property (<https://reactnative.dev/docs/textinput#onchangetext>) to the `TextInput` component and set is equal to the `useState` hook's `setValue` function:   
     `onChangeText={text => setValue(text)};`    
     However, we can write this in the more concise form:    
-    `onChangetext={setValue}    
+    `onChangetext={setValue}`    
     The `onChangeText` property automatically passes the changed text in the `textInput` component to a callback function handler -- which in this case is the `setValue` function -- we can simply set the prop equal to `setValue`
   - Note 4: We add a placeholder property to the `TextInput` component to direct the user to enter a color:    
-    `placeholder="enter a color..."
+    `placeholder="enter a color..."`
   - Note 5: We create a reference to the text input with the `useRef` hook (<https://reactjs.org/docs/hooks-reference.html>) so that we can reference the text input's built-in methods:   
     `const input = useRef();` and in the `TextInput` component:   
     ```
@@ -497,7 +497,7 @@
       setValue("");
     }}
     ```
-    - Note 6a: `input.current.blur` deselect` the text input and disappears the keyboard.
+    - Note 6a: `input.current.blur` deselects the text input and disappears the keyboard.
     - Note 6b: `setValue("")` resets the state variable `inputValue` back to an empty string
   - Note 8 (See first Note 7 below): Finally, we modify the `onPress` call back function so that it passes the user's inputted color (ie. `inputValue`) to the `App` parent component's `onNewColor` function/property:
     ```
