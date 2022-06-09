@@ -250,7 +250,7 @@
     },
   });
   ```
-- Third, in the `components.ColorList.js` component, we remove the logic that changes the background color of our "home", i.e. color list, screen. See the three spaces where we remve references to the `backgroundColor`:    
+- Third, in the `components.ColorList.js` component, we remove the logic that changes the background color of our "home", i.e. color list, screen. See the three spaces where we remove references to the `backgroundColor`:    
   ```
   export default function ColorList() {
     // 1.: const [backgroundColor, setBackgroundColor] = useState("blue");
@@ -277,7 +277,7 @@
   }
   ```
 - Now that we cleaned up the appearances of the screen, we can add the navigation logic.
-- The navigation (i.e., the stack) begins at the first screen that's rendered - the home screen. Recall, this is defined in the `App.js` file. When a `<Screen />` component is rendered, it actually passes more properties - in this case, the props are passed to the `<ColorList />` component. Specifically, there is a `navigation` object that's passed to props, and can be used to navigate between screens. In the `<components/ColorList.js` file, in the `<FlatList />` component, where the color buttons are rendered, we add an `onPress` property to each color button that calls the `navigation.navigate` function to navigate to the `details` screen. See the following code in the `<components/ColorList.js` file:    
+- The navigation (i.e., the stack) begins at the first screen that's rendered - the home screen. Recall, this is defined in the `App.js` file. When a `<Screen />` component is rendered, it actually passes more properties - in this case, the props are passed to the `<ColorList />` component. Specifically, there is a `navigation` object thatis automatically passed to props, and can be used to navigate between screens. For more information on the `navigation` prop, see <https://reactnavigation.org/docs/navigation-prop>. In the `<components/ColorList.js` file, in the `<FlatList />` component, where the color buttons are rendered, we add an `onPress` property to each color button that calls the `navigation.navigate` function to navigate to the `details` screen. See the following code in the `<components/ColorList.js` file:    
   ```
   export default function ColorList({ navigation }) {
     const { colors, addColor } = useColors();
@@ -325,7 +325,7 @@
     - Note 2a: The `navigation.navigate` function can take two parameters. The first argument is the name of the screen that you want to navigate to. The second argument is a parameters object, within which you add any data to be passed to the navigation request. In this case, we pass the name of the color (to the "Details" screen which is rendered by the `ColorDetails.js` component file) which is referenced within this render item function as `item.color`:    
       `onPress={() => navigation.navigate("Details", { color: item.color })}`   
       More information about `navigate` can be found at <https://reactnavigation.org/docs/navigation-prop#navigate>
-- In addition to the `navigation` prop, `<Screen />` also passes `route` as a prop when it is rendered. As just noted above, the name of the color is passed to the "Details" screen which is rendered by the `ColorDetails.js` component file. We can access the color parameter from the `route` property object. Just like the way `App.js` passed `navigation` properties to the `ColorList.js` component through the `<Screen />` component, `App.js` passes `route` properties to `ColorDetails.js` through its `<Screen />` component. Specifically, with the `route` object that's passed to props, we will use `route.params` to grab the `color` that was passed as a parameter:    
+- In addition to the `navigation` prop, `<Screen />` also passes `route` as a prop when it is rendered. For further information, see <https://reactnavigation.org/docs/route-prop>. As just noted above, the name of the color is passed to the "Details" screen which is rendered by the `ColorDetails.js` component file. We can access the color parameter from the `route` property object. Just like the way `App.js` passed `navigation` properties to the `ColorList.js` component through the `<Screen />` component, `App.js` passes `route` properties to `ColorDetails.js` through its `<Screen />` component. Specifically, with the `route` object that's passed to props, we will use `route.params` to grab the `color` that was passed as a parameter:    
     ```
     export default function ColorDetails({ route }) {
       return (
