@@ -7,10 +7,42 @@
     - To import: `import AsyncStorage from '@react-native-async-storage/async-storage';`
     - For further documentation, including installation and API, go to <https://react-native-async-storage.github.io/async-storage/docs/install>
 - We need to import the library into our project:   
-  ` `
+  `import AsyncStorage from '@react-native-async-storage/async-storage';`
 - Here is the fully modified code for `./hooks.js` that uses the `AsynchStorage` library API:    
   ```
-  
+  import { useState, useEffect } from "react";
+  import { generate } from "shortid";
+  import AsyncStorage from "@react-native-async-storage/async-storage";
+
+  export const useColors = () => {
+    const [colors, setColors] = useState([]);
+
+    // Load colors that are saved on a device's persistent memory
+    const loadColors = async () => {
+      const colorData = await AsyncStorage.getItem("@ColorListStore:Colors");
+      if (colorData) {
+        const colors = JSON.parse(colorData);
+        setColors(colors);
+      }
+    };
+
+    // Initially load color data
+    useEffect(() => {
+      if (colors.length) return;
+      loadColors();
+    }, []);
+
+    // Save updated color data to memory
+    useEffect(() => {
+      AsyncStorage.setItem("@ColorListStore:Colors", JSON.stringify(colors));
+    }, [colors]);
+
+    const addColor = (color) => {
+      const newColor = { id: generate(), color };
+      setColors([newColor, ...colors]);
+    };
+    return { colors, addColor };
+  };
   ```
   - Note 1: We have moved the `useColors` hook into the `./hooks.js` file and we import it in the `./App.js` file. Here is the initial `./hooks.js` file - don't forget to export the `useColors` hook function:   
     ```
@@ -55,3 +87,45 @@
       AsyncStorage.setItem("@ColorListStore:Colors", JSON.stringify(colors));
     }, [colors]);
     ```
+- Here is the modified `App.js` file with the `useColors` custom hok extracted:
+  ```
+  import React, { useState } from "react";
+  import { StyleSheet, FlatList } from "react-native";
+  import ColorButton from "./components/ColorButton";
+  import ColorForm from "./components/ColorForm";
+  import { useColors } from "./hooks.js";
+
+  export default function App() {
+    const [backgroundColor, setBackgroundColor] = useState("blue");
+    const { colors, addColor } = useColors();
+
+    return (
+      <>
+        <ColorForm onNewColor={addColor} />
+        <FlatList
+          style={[styles.container, { backgroundColor }]}
+          data={colors}
+          renderItem={({ item }) => {
+            return (
+              <ColorButton
+                key={item.id}
+                backgroundColor={item.color}
+                onPress={setBackgroundColor}
+              />
+            );
+          }}
+        />
+      </>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      display: "flex",
+    },
+  });
+  ```
+
+### Video 2: React Navigation
+- 
