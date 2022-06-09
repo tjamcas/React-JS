@@ -226,3 +226,203 @@
       </Navigator>
     </NavigationContainer>
     ```
+
+### Video 3: Navigating Between Screens
+- In the following code, we clean up the appearance of our screens and enable navigation between the "Home" and "Details" screen.
+- In cleaning up the appearance of our screens, first, in `App.js`, we change the title of the "Home" screen so that the title does not default to the "name" property:    
+  ```
+  <Screen
+    name="Home"
+    options={{ title: "Color List" }}
+    component={ColorList}
+  />
+  ```
+- Second, we return to the `components/ColorForm.js` file to clean up the styling and remove the `marginTop` and set the `backgroundColor`:   
+  ```
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: "white",
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    txtInput: {
+      ... (no changes)
+    },
+  });
+  ```
+- Third, in the `components.ColorList.js` component, we remove the logic that changes the background color of our "home", i.e. color list, screen. See the three spaces where we remve references to the `backgroundColor`:    
+  ```
+  export default function ColorList() {
+    // 1.: const [backgroundColor, setBackgroundColor] = useState("blue");
+    const { colors, addColor } = useColors();
+
+    return (
+      <>
+        <ColorForm onNewColor={addColor} />
+        <FlatList
+          style={[styles.container //2.: , { backgroundColor }]}
+          data={colors}
+          renderItem={({ item }) => {
+            return (
+              <ColorButton
+                key={item.id}
+                backgroundColor={item.color}
+                // 3.: onPress={setBackgroundColor}
+              />
+            );
+          }}
+        />
+      </>
+    );
+  }
+  ```
+- Now that we cleaned up the appearances of the screen, we can add the navigation logic.
+- The navigation (i.e., the stack) begins at the first screen that's rendered - the home screen. Recall, this is defined in the `App.js` file. When a `<Screen />` component is rendered, it actually passes more properties - in this case, the props are passed to the `<ColorList />` component. Specifically, there is a `navigation` object that's passed to props, and can be used to navigate between screens. In the `<components/ColorList.js` file, in the `<FlatList />` component, where the color buttons are rendered, we add an `onPress` property to each color button that calls the `navigation.navigate` function to navigate to the `details` screen. See the following code in the `<components/ColorList.js` file:    
+  ```
+  export default function ColorList({ navigation }) {
+    const { colors, addColor } = useColors();
+
+    return (
+      <>
+        <ColorForm onNewColor={addColor} />
+        <FlatList
+          style={[styles.container]}
+          data={colors}
+          renderItem={({ item }) => {
+            return (
+              <ColorButton
+                key={item.id}
+                backgroundColor={item.color}
+                onPress={() => navigation.navigate("Details")}
+              />
+            );
+          }}
+        />
+      </>
+    );
+  }
+  ```
+  - Note 1: We deconstruct the `navigation` object from the passed `props` when we declare the `ColorList` component function:   
+    `export default function ColorList({ navigation }) { ... }`
+  - Note 2: The `navigation` object has a `navigate` method that we can reference for each of the items in our `<FlatList />`. Specifically, we use it in the `onPress` function to navigate to a "Details" screen:   
+    ```
+    <FlatList
+      style={[styles.container]}
+      data={colors}
+      renderItem={({ item }) => {
+        return (
+          <ColorButton
+            key={item.id}
+            backgroundColor={item.color}
+            onPress={() =>
+              navigation.navigate("Details", { color: item.color })
+            }
+          />
+        );
+      }}
+    />
+    ```
+    - Note 2a: The `navigation.navigate` function can take two parameters. The first argument is the name of the screen that you want to navigate to. The second argument is a parameters object, within which you add any data to be passed to the navigation request. In this case, we pass the name of the color (to the "Details" screen which is rendered by the `ColorDetails.js` component file) which is referenced within this render item function as `item.color`:    
+      `onPress={() => navigation.navigate("Details", { color: item.color })}`   
+      More information about `navigate` can be found at <https://reactnavigation.org/docs/navigation-prop#navigate>
+- In addition to the `navigation` prop, `<Screen />` also passes `route` as a prop when it is rendered. As just noted above, the name of the color is passed to the "Details" screen which is rendered by the `ColorDetails.js` component file. We can access the color parameter from the `route` property object. Just like the way `App.js` passed `navigation` properties to the `ColorList.js` component through the `<Screen />` component, `App.js` passes `route` properties to `ColorDetails.js` through its `<Screen />` component. Specifically, with the `route` object that's passed to props, we will use `route.params` to grab the `color` that was passed as a parameter:    
+    ```
+    export default function ColorDetails({ route }) {
+      return (
+        <View style={styles.container}>
+          <Text>Color Details: {route.params.color}</Text>
+        </View>
+      );
+    }
+    ```
+  - Note 3: We deconstruct the `route` object from the passed `props` when we declare the `ColorDetails` component function:   
+    `export default function ColorDetails({ route }) { ... }`
+  - Note 4: We modify the displayed `<Text />` component by referencing `route.params.color` as follows:    
+    `<Text>Color Details: {route.params.color}</Text>`
+- Here is the modified `App.js` file:
+  ```
+  import React from "react";
+  import ColorList from "./components/ColorList";
+  import ColorDetails from "./components/ColorDetails";
+  import { NavigationContainer } from "@react-navigation/native";
+  import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+  const { Navigator, Screen } = createNativeStackNavigator();
+
+  export default function App() {
+    return (
+      <NavigationContainer>
+        <Navigator>
+          <Screen
+            name="Home"
+            options={{ title: "Color List" }}
+            component={ColorList}
+          />
+          <Screen name="Details" component={ColorDetails} />
+        </Navigator>
+      </NavigationContainer>
+    );
+  }
+  ```
+- Here is the modified `components/ColorList.js` file:    
+  ```
+  import React, { useState } from "react";
+  import { StyleSheet, FlatList } from "react-native";
+  import ColorButton from "./ColorButton";
+  import ColorForm from "./ColorForm";
+  import { useColors } from "../hooks.js";
+
+  export default function ColorList({ navigation }) {
+    const { colors, addColor } = useColors();
+
+    return (
+      <>
+        <ColorForm onNewColor={addColor} />
+        <FlatList
+          style={[styles.container]}
+          data={colors}
+          renderItem={({ item }) => {
+            return (
+              <ColorButton
+                key={item.id}
+                backgroundColor={item.color}
+                onPress={() =>
+                  navigation.navigate("Details", { color: item.color })
+                }
+              />
+            );
+          }}
+        />
+      </>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      display: "flex",
+    },
+  });
+  ```
+- Here is the modified `components/ColorDetails.js` file:   
+  ```
+  import React from "react";
+  import { View, StyleSheet, Text } from "react-native";
+
+  export default function ColorDetails({ route }) {
+    return (
+      <View style={styles.container}>
+        <Text>Color Details: {route.params.color}</Text>
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });
+  ```
