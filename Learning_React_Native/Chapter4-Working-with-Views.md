@@ -560,7 +560,7 @@
     />
     ```
 
-### Video 8 : Creating a Custome Hook
+### Video 8 : Creating a Custom Hook
 - In this section, we will create a custom hook to read the user's input of a color that they would like to add to a list of colors.
 - We will install the "Shortid" package to generate a unique id for each color in our list:     
   From, the file location of our app, we enter the terminal shell command `npm i shortid`,    
