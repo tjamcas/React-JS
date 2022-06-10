@@ -426,3 +426,39 @@
     },
   });
   ```
+
+### Video 4: Final Touches using the Color API
+- In this video, we write the final code for the color list app. WE add functionality to the color detail screen to change the background color of the screen to the selected color. We also display information about the color in the detail screen: its RGB, HSL, and luminosity values. We also add styles to the detail text toincrrase its font size and to change the text color to the inverse of the color so that the text can be more easily read.
+- We install the `Color` API library using the command:   
+  `npm install Color`   
+  And import the `Color` library int our component file:    
+  `import Color from "color";`
+- Here is the fully modified code for the `components/ColorDetails.js` file:    
+  ```
+  
+  ```
+  - Note 1: at present the color details screen shows a text message with the name of the color displayed on background field of grey. This information was passed as a `route` parameter by `ColorList` to `ColorDetails`. To simplify the code, we create a `color` variable by destructuring `color: name` from `route` params, like so:    
+    ```
+    const { color: name } = route.params;
+    const color = Color(name);
+    ```
+  - Note 2: we alter the style to display the selected color as the background color:   
+    `<View style={[styles.container, { backgroundColor: name }]}>`
+  - Note 3: next we add `<Text />` components under the `<View />` component with the RGB, HSL, and luminosity values of the selected color by using the `Color` api:   
+    ```
+    <Text>{name}</Text>
+    <Text>{color.rgb().toString()}</Text>
+    <Text>{color.hsl().toString()}</Text>
+    <Text>{color.luminosity()}</Text>
+    ```
+  - Note 4: we create a variable called `textColor` that is the inverse of the color that we are detailing. The `textColor` is used to style the `<Text />` components:
+    ```
+    const textColor = { fontSize: 20, color: color.negate().toString() };
+    return (
+      <View style={[styles.container, { backgroundColor: name }]}>
+        <Text style={textColor}>{name}</Text>
+        <Text style={textColor}>{color.rgb().toString()}</Text>
+        <Text style={textColor}>{color.hsl().toString()}</Text>
+        <Text style={textColor}>{color.luminosity()}</Text>
+      </View>
+    ```
