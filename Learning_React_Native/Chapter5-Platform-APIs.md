@@ -428,10 +428,10 @@
   ```
 
 ### Video 4: Final Touches using the Color API
-- In this video, we write the final code for the color list app. WE add functionality to the color detail screen to change the background color of the screen to the selected color. We also display information about the color in the detail screen: its RGB, HSL, and luminosity values. We also add styles to the detail text toincrrase its font size and to change the text color to the inverse of the color so that the text can be more easily read.
+- In this video, we write the final code for the color list app. WE add functionality to the color detail screen to change the background color of the screen to the selected color. We also display information about the color in the detail screen: its RGB, HSL, and luminosity values. We add styles to the detail text to increase its font size and to change the text color to the inverse of the color so that the text can be more easily read.
 - We install the `Color` API library using the command:   
   `npm install Color`   
-  And import the `Color` library int our component file:    
+  And import the `Color` library into our component file:    
   `import Color from "color";`
 - Here is the fully modified code for the `components/ColorDetails.js` file:    
   ```
@@ -469,7 +469,7 @@
     ```
   - Note 2: we alter the style to display the selected color as the background color:   
     `<View style={[styles.container, { backgroundColor: name }]}>`
-  - Note 3: next we add `<Text />` components under the `<View />` component with the RGB, HSL, and luminosity values of the selected color by using the `Color` api:   
+  - Note 3: next, we add `<Text />` components under the `<View />` component with the RGB, HSL, and luminosity values of the selected color by using the `Color` api:   
     ```
     <Text>{name}</Text>
     <Text>{color.rgb().toString()}</Text>
