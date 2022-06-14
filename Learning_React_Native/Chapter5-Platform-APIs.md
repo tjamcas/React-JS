@@ -435,7 +435,32 @@
   `import Color from "color";`
 - Here is the fully modified code for the `components/ColorDetails.js` file:    
   ```
-  
+  import React from "react";
+  import { View, StyleSheet, Text } from "react-native";
+  import Color from "color";
+
+  export default function ColorDetails({ route }) {
+    const { color: name } = route.params;
+    const color = Color(name);
+    const textColor = { fontSize: 20, color: color.negate().toString() };
+    return (
+      <View style={[styles.container, { backgroundColor: name }]}>
+        <Text style={textColor}>{name}</Text>
+        <Text style={textColor}>{color.rgb().toString()}</Text>
+        <Text style={textColor}>{color.hsl().toString()}</Text>
+        <Text style={textColor}>{color.luminosity()}</Text>
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });
   ```
   - Note 1: at present the color details screen shows a text message with the name of the color displayed on background field of grey. This information was passed as a `route` parameter by `ColorList` to `ColorDetails`. To simplify the code, we create a `color` variable by destructuring `color: name` from `route` params, like so:    
     ```
