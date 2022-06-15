@@ -491,7 +491,7 @@
 ### Video 5: Fetching Data
 - Here is a new app that fetches data from the internet using asynch functions.
 - We create the following code using the Expo Snack tool by going to <https://expo.dev/> and, in the `Explore` panel, selecting the `Try Snack` button.
-- The default code imports `Constant`,    
+- The default Expo IDE code imports `Constant`,    
   `import Constants from 'expo-constants';`   
   which allows us to get the exact status bar height for each device:   
   ```
@@ -507,7 +507,7 @@
   });
   ```
 - We import some new components:    
-  `import { Text, ScrollView, SafeAreaView, StyleSheet } from 'react-native';`    
+  `import { Text, ScrollView, SafeAreaView, StyleSheet, Image } from 'react-native';`    
   - `SafeAreaView` renders the view in the main area of our screen.
   - `ScrollView` is like a regular view but it scrolls content that cannot fit within a single screen
 - We create the state variable, `pet`, with the `useState` hook:    
@@ -516,7 +516,66 @@
   `if (!pet) return null;`
 - We load data from the internet as an app side effect with the `useEffect` hook and specify an empty dependency array so that the effect  function, `loadPet`, is invoked once on initial rendering:   
   `useEffect(() => {loadPet;}, []);`
-- We create the `loadPet` asynchronous function that loads data from an ineternet API, `pet-library.moonhighway.com/api/randomPet`, created for this course that returns an object of JSON data about a random pet:
+- We create the `loadPet` asynchronous function that loads data from the internet API, `pet-library.moonhighway.com/api/randomPet`, that was created for this course and that returns an object of JSON data about a random pet:
   ```
-  
+  const loadPet = async () => {
+    const res = await fetch(
+      'https://pet-library.moonhighway.com/api/randomPet'
+    );
+    const data = await res.json();
+    setPet(data);
+  };
+  ```
+- Here is the full code for `App.js`:   
+  ```
+  import React, { useState, useEffect } from 'react';
+  import { Text, ScrollView, SafeAreaView, StyleSheet, Image } from 'react-native';
+  import Constants from 'expo-constants';
+
+  export default function App() {
+    const [pet, setPet] = useState();
+
+    const loadPet = async () => {
+      const res = await fetch(
+        'https://pet-library.moonhighway.com/api/randomPet'
+      );
+      const data = await res.json();
+      setPet(data);
+    };
+
+    useEffect(() => {
+      loadPet();
+    }, []);
+
+    if (!pet) return null;
+
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          <Image style={styles.pic} source={{ uri: pet.photo.full }} />
+          <Text style={styles.paragraph}>{pet.name} - {pet.category}</Text>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingTop: Constants.statusBarHeight,
+      backgroundColor: '#ecf0f1',
+      padding: 8,
+    },
+    paragraph: {
+      margin: 24,
+      fontSize: 18,
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    pic:{
+      height: 500,
+      width: 500,
+    }
+  });
   ```
