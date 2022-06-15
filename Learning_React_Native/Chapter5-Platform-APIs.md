@@ -487,3 +487,36 @@
         <Text style={textColor}>{color.luminosity()}</Text>
       </View>
     ```
+
+### Video 5: Fetching Data
+- Here is a new app that fetches data from the internet using asynch functions.
+- We create the following code using the Expo Snack tool by going to <https://expo.dev/> and, in the `Explore` panel, selecting the `Try Snack` button.
+- The default code imports `Constant`,    
+  `import Constants from 'expo-constants';`   
+  which allows us to get the exact status bar height for each device:   
+  ```
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingTop: Constants.statusBarHeight,
+      backgroundColor: '#ecf0f1',
+      padding: 8,
+    },
+    ...
+  });
+  ```
+- We import some new components:    
+  `import { Text, ScrollView, SafeAreaView, StyleSheet } from 'react-native';`    
+  - `SafeAreaView` renders the view in the main area of our screen.
+  - `ScrollView` is like a regular view but it scrolls content that cannot fit within a single screen
+- We create the state variable, `pet`, with the `useState` hook:    
+  `const [pet, setPet] = useState();`
+- If there is no `pet`, then we return `null` - which means nothing is rendered in the app screen:    
+  `if (!pet) return null;`
+- We load data from the internet as an app side effect with the `useEffect` hook and specify an empty dependency array so that the effect  function, `loadPet`, is invoked once on initial rendering:   
+  `useEffect(() => {loadPet;}, []);`
+- We create the `loadPet` asynchronous function that loads data from an ineternet API, `pet-library.moonhighway.com/api/randomPet`, created for this course that returns an object of JSON data about a random pet:
+  ```
+  
+  ```
