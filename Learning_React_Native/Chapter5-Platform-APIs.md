@@ -579,3 +579,85 @@
     }
   });
   ```
+
+### Video 6: Using RefreshControl
+- A React Native app allows the user to refresh an app using the `RefreshCOntrol` component. In the case of this app, we want the user to pull the image/information of another pet by pulling (swiping) down on the screen.
+- Here is the revised `App.js` file:
+  ```
+  import React, { useState, useEffect } from 'react';
+  import { Text, ScrollView, SafeAreaView, StyleSheet, Image, ActivityIndicator, RefreshControl } from 'react-native';
+  import Constants from 'expo-constants';
+
+  export default function App() {
+    const [pet, setPet] = useState();
+    const [loading, setLoading] = useState(false);
+
+    const loadPet = async () => {
+      setLoading(true);
+      const res = await fetch(
+        'https://pet-library.moonhighway.com/api/randomPet'
+      );
+      const data = await res.json();
+      await Image.prefetch(data.photo.full);
+      setPet(data);
+      setLoading(false);
+    };
+
+    useEffect(() => {
+      loadPet();
+    }, []);
+
+    if (!pet) return <ActivityIndicator size="large" />;
+
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={loadPet} />}>
+          <Image style={styles.pic} source={{ uri: pet.photo.full }} />
+          <Text style={styles.paragraph}>{pet.name} - {pet.category}</Text>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingTop: Constants.statusBarHeight,
+      backgroundColor: '#ecf0f1',
+      padding: 8,
+    },
+    paragraph: {
+      margin: 24,
+      fontSize: 18,
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    pic:{
+      height: 500,
+      width: 500,
+    }
+  });
+  ```
+  - Note 1: we have to import 1. the `ActivityIndicator`component (the spinning wheel which appears to indicate that the app is generating an update), and 2. the RefreshControl component which will indicate when we drag the screen down and display a loading animation while we request a new pet:   
+    `import { Text, ScrollView, SafeAreaView, StyleSheet, Image, ActivityIndicator, RefreshControl } from 'react-native';`
+  - Note 2: We update the `if` clause logic to display an activity indicator while the data is loading ( i.e., `pet` equals `null`):   
+    `if (!pet) return <ActivityIndicator size="large" />;`
+  - Note 3: We create a state variable for `loading`:   
+    `const [loading, setLoading] = useState(false);`    
+    and we modify the `loadPet` function so that `loading` is `true` while we await fetching the pet data, and `false` after we have retrieved the pet data:    
+    ```
+    const loadPet = async () => {
+      setLoading(true);
+      const res = await fetch(
+        'https://pet-library.moonhighway.com/api/randomPet'
+      );
+      const data = await res.json();
+      setPet(data);
+      setLoading(false);
+    };
+    ```
+  - Note 4: we use our `loading` state variable with a `refreshControl` property in our `Scrollview ` component:    
+    `<ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={loadPet} />}>` 
+  - Note 5: to make sure we load the full pet image before we try to render it, we add the following line to the `loadPet` function:   
+    `await Image.prefetch(data.photo.full);`
