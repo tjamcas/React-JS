@@ -17,6 +17,44 @@
 - Before we publish the ColorCatalog app, we will configure `app.json` to customize the "splash" and "icon" files, and add a 'description" key.
   - The `app.json` file is used by Expo when it builds your application and it contains important configuration details about the application. So within this file we have keys for `icon` and `splash` that we change to `cc-splash` and `cc-icon`.
   - We can add a description: "Catalog your colors. Save your favorite web colors and view the details."
+  - Here is the full `app.json` file:
+    ```
+    {
+      "expo": {
+        "name": "ColorCatalog",
+        "slug": "ColorCatalog",
+        "description": "Catalog your colors. Save your favorite web colors in a list and view the details.",
+        "version": "1.0.0",
+        "platforms": ["ios", "android"],
+        "orientation": "portrait",
+        "icon": "./assets/cc-icon.png",
+        "userInterfaceStyle": "light",
+        "splash": {
+          "image": "./assets/cc-splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        },
+        "updates": {
+          "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": [
+          "**/*"
+        ],
+        "ios": {
+          "supportsTablet": true
+        },
+        "android": {
+          "adaptiveIcon": {
+            "foregroundImage": "./assets/adaptive-icon.png",
+            "backgroundColor": "#FFFFFF"
+          }
+        },
+        "web": {
+          "favicon": "./assets/favicon.png"
+        }
+      }
+    }
+    ```
 - To publish our application, 
   - /1. Open a terminal window within VS Code. 
   - /2. Using the Expo CLI, type in the shell command `expo publish`.
