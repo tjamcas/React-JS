@@ -69,7 +69,7 @@
   - Add some build details key-value pairs into the `app.json` file:
     - Add the build identifier key-value pair which is a unique identifier for the app:   
       `"bundleIdentifier": "com.moonhighway.color-organizer",`
-      - Note that the `bundleIdentifier` value takes the form: `extension.organizationName.appName'
+      - Note that the `bundleIdentifier` value takes the form: `extension.organizationName.appName`
     - Add the IOS build number:   
       `"buildNumber": "1.0.0",`
     - Here is the revised `app.json` file:
