@@ -93,9 +93,9 @@
           },
           "assetBundlePatterns": ["**/*"],
           "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
             "bundleIdentifier": "com.moonhighway.color-organizer",
-            "buildNumber": "1.0.0",
+            "buildNumber": "1.0.0"
           }
         }
       }
