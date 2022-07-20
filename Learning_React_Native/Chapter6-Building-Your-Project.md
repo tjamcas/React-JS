@@ -14,9 +14,9 @@
   - /4. When the Expo Bundler starts and the tunnel is up and running, click on button "Run on Android device/emulator". Xcode will then find your default Android virtual device and run the current project within that simulator.
 
 ### Video 4: Publishing your Expo Project
-- Before we publish the ColorCatalog app, we will configure `app.json` to customize the "splash" and "icon" files, and add a 'description" key.
-  - The `app.json` file is used by Expo when it builds your application and it contains important configuration details about the application. So within this file we have keys for `icon` and `splash` that we change to `cc-splash` and `cc-icon`.
-  - We can add a description: "Catalog your colors. Save your favorite web colors and view the details."
+- Before we publish the ColorCatalog app, we will configure `app.json` to customize the "splash" and "icon" files, and add a "description" key.
+  - The `app.json` file is used by Expo when it builds your application and it contains important configuration details about the application. In the file we change the values of the `icon` and `splash` keys to `cc-splash` and `cc-icon`.
+  - We add a value to the "description" key in the file: "Catalog your colors. Save your favorite web colors and view the details."
   - Here is the full `app.json` file:
     ```
     {
@@ -59,5 +59,59 @@
   - /1. Open a terminal window within VS Code. 
   - /2. Using the Expo CLI, type in the shell command `expo publish`.
     -  Expo will build your iOS JavaScript bundle, your Android JavaScript bundle, and place all of your assets online. 
-    -  To access the online assets, go to the URL for the "project page" as provided by Expo in the terminal shell. For example: `https://expo.dev/@expo_username/ColorCatalog?serviceType=classic&distribution=expo-go` where `expo_username` is the developer's user name.
+    -  To access the online assets, go to the URL for the "project page" as provided in the message from Expo in the terminal shell. For example: `https://expo.dev/@expo_username/ColorCatalog?serviceType=classic&distribution=expo-go` where `expo_username` is the developer's user name.
   -  These steps publish/host our bundle online with Expo. When we make changes to the app, we simply republish the bundle and those changes will automatically be pushed to everyone's device.
+
+### Video 5: Building for IOS Devices
+- At present we are not running the app in a standalone mode. Instead, we are running Expo which fires off the ColorCatalog app.
+- We want build the App and run it stanalone on a device or simulator. To do this, we need to distribute the ColorCatalog app through the Apple App Store.
+- To distribute the app through the App Store, we need to:
+  - Add some build details key-value pairs into the `app.json` file:
+    - Add the build identifier key-value pair which is a unique identifier for the app:   
+      `"bundleIdentifier": "com.moonhighway.color-organizer",`
+      - Note that the `bundleIdentifier` value takes the form: `extension.organizationName.appName'
+    - Add the IOS build number:   
+      `"buildNumber": "1.0.0",`
+    - Here is the revised `app.json` file:
+      ```
+      {
+        "expo": {
+          "name": "HelloWorld",
+          "description": "Catalog your colors. Save your favorite web colors and view the details",
+          "slug": "ColorCatalog",
+          "platforms": ["ios", "android"],
+          "version": "1.0.0",
+          "orientation": "portrait",
+          "icon": "./assets/cc-icon.png",
+          "splash": {
+            "image": "./assets/cc-splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+          },
+          "updates": {
+            "fallbackToCacheTimeout": 0
+          },
+          "assetBundlePatterns": ["**/*"],
+          "ios": {
+            "supportsTablet": true
+            "bundleIdentifier": "com.moonhighway.color-organizer",
+            "buildNumber": "1.0.0",
+          }
+        }
+      }
+      ```
+  - Open a terminal window in the App's development folder and direct Expo to run the build:   
+    `expo build:ios`
+    - Expo is using Xcode in the iOS SDKs to build the application on their servers (so that you don't have to)
+  - Submit the app to the App Store using your Apple App Store account. During the build process, Expo links your developer account to this build.
+    - During the build process, Expo will ask whether you have a developer account to link this build. Say yes, and enter your Apple developer ID and password. Now Expo will talk to the Apple developer portal on your behalf. 
+    - After responding to the Expo dialog questions, and entering the requested information, Expo queues a build for an iOS bundle, and provides build status/progress messages. For further Expo build status, click on the link that Expo provides when you submit the build request. This provides specific details about the current build, including the associated logs.
+    - You will be offered the option to let Expo manage the process of building service keys for push notifications. We don't have any in the ColorCatalog app, but you can let Expo manage that process in case you want to add them in the future. 
+    - You can set up your Apple provisioning on your own, but it's easier to let Expo manage that process.
+    - If you kill the terminal after starting the build, then re-open a terminal window and type: `expo build:status` to find out the build status.
+  - Download the zipped file that Expo built, and unpack it
+    - In the terminal window, go to the `downloads` folder, and type:   
+      `tar -xvcf tarFileName.tar.gz`
+    - if you list your files, then you should find a file of the form `AppName.app` -- e.g. `ColorCatalog.app`
+  - To install the app on your simulator, type    
+    `xcrun simctl install booted AppName.app`
